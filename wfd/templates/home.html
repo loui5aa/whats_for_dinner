@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Dashboard</h2>
+    <p>Welcome, {{ user.username }}!</p>
+
+    <ul>
+        <li><a href="{% url 'profile' %}">View Profile</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <!-- Add more links here later for other features -->
+    </ul>
+{% endblock %}
