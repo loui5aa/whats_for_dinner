@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Weekly Meal Plan</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Recipe</button>
+    </form>
+
+    <h3>Your Meal Plan:</h3>
+    <ul>
+        {% for item in items %}
+            <li><strong>{{ item.day }}</strong>: {{ item.recipe.title }}</li>
+        {% empty %}
+            <li>No meals added yet.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'shopping_list' %}">Generate Shopping List</a>
+{% endblock %}

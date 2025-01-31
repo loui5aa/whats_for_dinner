@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Shopping List</h2>
+    <pre>{{ shopping_list.items }}</pre>
+    <a href="{% url 'meal_plan' %}">Back to Meal Plan</a>
+{% endblock %}

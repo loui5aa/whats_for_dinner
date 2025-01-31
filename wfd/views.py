@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseForbidden
-from .forms import CustomUserCreationForm, NewRecipeForm
-from .models import Recipe
+from .forms import CustomUserCreationForm, NewRecipeForm, MealPlanItemForm
+from .models import Recipe,MealPlan, MealPlanItem, ShoppingList
 from django.contrib.auth.decorators import login_required
 
 def home(request):
@@ -64,3 +64,42 @@ def delete_recipe(request, recipe_id):
         return redirect('recipe_list')
     
     return render(request, 'recipes/delete_recipe.html', {'recipe': recipe})
+
+@login_required
+def meal_plan_view(request):
+    meal_plan, created = MealPlan.objects.get_or_create(user=request.user)  # Get or create a meal plan for the user
+    items = meal_plan.items.all()
+
+    if request.method == 'POST':
+        form = MealPlanItemForm(request.POST, user=request.user)
+        if form.is_valid():
+            meal_item = form.save(commit=False)
+            meal_item.meal_plan = meal_plan
+            meal_item.save()
+            return redirect('meal_plan')
+        
+    else:
+        form = MealPlanItemForm(user=request.user)
+    return render(request, 'meal_plan.html', {'meal_plan': meal_plan, 'items': items, 'form': form})
+
+@login_required
+def generate_shopping_list(request):
+    meal_plan = MealPlan.objects.filter(user=request.user).first()
+    if not meal_plan:
+        return redirect('meal_plan')
+
+    ingredient_list = []
+    for item in meal_plan.items.all():
+        recipe = item.recipe
+        ingredient_list.extend(recipe.ingredients.split("\n"))
+    shopping_items = {}
+    for ingredient in ingredient_list:
+        ingredient = ingredient.strip()
+        if ingredient:
+            shopping_items[ingredient] = shopping_items.get(ingredient, 0) + 1
+    
+    shopping_list, created = ShoppingList.objects.get_or_create(user=request.user)
+    shopping_list.items = "\n".join([f"{v}x {k}" for k, v in shopping_items.items()])
+    shopping_list.save()
+
+    return render(request, 'shopping_list.html', {'shopping_list': shopping_list})
