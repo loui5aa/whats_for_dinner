@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{{ recipe.title }}</h2>
+    <p><strong>Category:</strong> {{ recipe.get_tags_display }}</p>
+    <p><strong>Ingredients:</strong></p>
+    <pre>{{ recipe.ingredients }}</pre>
+    <p><strong>Method:</strong></p>
+    <pre>{{ recipe.method }}</pre>
+    <p><em>Added by {{ recipe.user.username }} on {{ recipe.created_at|date:"F j, Y" }}</em></p>
+    <a href="{% url 'recipe_list' %}">Back to Recipes</a>
+    {% if user == recipe.user %}
+        <a href="{% url 'delete_recipe' recipe.id %}" style="color: red;">Delete Recipe</a>
+    {% endif %}
+
+
+{% endblock %}

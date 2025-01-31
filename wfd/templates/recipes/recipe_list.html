@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>All Recipes</h2>
+    <a href="{% url 'add_recipe' %}">Add New Recipe</a>
+    <ul>
+        {% for recipe in recipes %}
+            <li>
+                <a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a>
+                ({{ recipe.get_tags_display }})
+            </li>
+        {% empty %}
+            <li>No recipes added yet.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
