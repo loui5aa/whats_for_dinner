@@ -1,7 +1,19 @@
 {% extends "base.html" %}
-
 {% block content %}
+<div class="container mt-4">
     <h2>Welcome, {{user.username}}!</h2>
     <p>Email: {{ user.email }}</p>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Your Recipes</h5>
+            <p class="card-text">You have uploaded <strong> {{ recipe_count }}</strong> recipes.</p>
+            <a href="{% url 'recipe_list' %}" class="btn btn-primary">View Your Recipes</a>
+        </div>
+    </div>
     <p><a href="{% url 'logout' %}">Logout</a></p>
+</div>
 {% endblock %}
+<!-- 
+    <h2>Welcome, {{user.username}}!</h2>
+    <p>Email: {{ user.email }}</p>
+    <p><a href="{% url 'logout' %}">Logout</a></p> -->

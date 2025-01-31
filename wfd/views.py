@@ -24,7 +24,9 @@ def register(request):
 
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html')
+    recipe_count = Recipe.objects.filter(user=request.user).count()
+    print(recipe_count)
+    return render(request, 'accounts/profile.html', {'recipe_count' : recipe_count})
 
 @login_required
 def home(request):
@@ -105,6 +107,12 @@ def generate_shopping_list(request):
     shopping_list.save()
 
     return render(request, 'shopping_list.html', {'shopping_list': shopping_list})
+
+@login_required
+def clear_meal_plan(request):
+    MealPlan.objects.filter(user=request.user).delete()
+    ShoppingList.objects.filter(user=request.user).delete()
+    return redirect('meal_plan')
 
 @login_required
 def dashboard(request):
