@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Dashboard</h2>
+    
+    <h3>Meal Plan for {{ today }}</h3>
+    
+    {% if today_meals %}
+        <ul>
+            {% for meal in today_meals %}
+                <li>
+                    <a href="{% url 'recipe_detail' meal.recipe.id %}">
+                        {{ meal.recipe.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No meals planned for today.</p>
+    {% endif %}
+
+    <a href="{% url 'meal_plan' %}">Edit Meal Plan</a>
+{% endblock %}

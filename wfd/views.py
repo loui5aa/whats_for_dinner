@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.timezone import now
+import datetime
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseForbidden
@@ -103,3 +105,12 @@ def generate_shopping_list(request):
     shopping_list.save()
 
     return render(request, 'shopping_list.html', {'shopping_list': shopping_list})
+
+@login_required
+def dashboard(request):
+    today = datetime.datetime.today().strftime('%A') #Gets the weekday
+
+    meal_plan = MealPlan.objects.filter(user=request.user).first()
+    today_meals= meal_plan.items.filter(day=today) if meal_plan else []
+
+    return render(request, 'dashboard.html', {'today_meals': today_meals, 'today': today})
